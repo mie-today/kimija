@@ -93,7 +93,7 @@
 </head>
 <body>
   <div class="container">
-    <a href="dashboard.html" class="logo-link">
+    <a href="dashboard" class="logo-link">
       <img src="https://github.com/rylhong/mie-pages/blob/main/logo_white_70x70.png?raw=true" alt="Mie Logo" class="logo">
     </a>
     <h1>Welcome</h1>
@@ -127,7 +127,7 @@
     </form>
 
     <div class="link">
-      Already have an account? <a href="dashboard.html">Sign In</a>
+      Already have an account? <a href="dashboard">Sign In</a>
     </div>
   </div>
 
