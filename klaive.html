@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KLAIVE — Just send it. The system handles the rest.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --teal: #1D9E75;
+            --teal-deep: #0F6E56;
+            --teal-light: #E1F5EE;
+            --black: #0E0E0E;
+            --surface: #1A1A1A;
+            --surface2: #222222;
+            --border: #2A2A2A;
+            --text: #F5F5F3;
+            --text2: #888780;
+            --text3: #444441;
+        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--black); color: var(--text); }
+        .grotesk { font-family: 'Space Grotesk', sans-serif; }
+        .teal { color: var(--teal); }
+
+        /* Symbol SVG animation */
+        .symbol-dash {
+            stroke-dasharray: 7 6;
+            animation: dash-move 3s linear infinite;
+        }
+        @keyframes dash-move {
+            to { stroke-dashoffset: -52; }
+        }
+
+        /* Nav */
+        nav {
+            border-bottom: 0.5px solid var(--border);
+            background: rgba(14,14,14,0.85);
+            backdrop-filter: blur(12px);
+            position: sticky; top: 0; z-index: 50;
+        }
+        .nav-inner {
+            max-width: 1080px; margin: 0 auto;
+            padding: 0 32px; height: 60px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .nav-logo {
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none;
+        }
+        .nav-logo span {
+            font-size: 13px; font-weight: 400;
+            letter-spacing: 4px; color: var(--text);
+        }
+        .nav-links { display: flex; align-items: center; gap: 28px; }
+        .nav-links a {
+            font-size: 13px; color: var(--text2);
+            text-decoration: none; transition: color 0.15s;
+        }
+        .nav-links a:hover { color: var(--text); }
+        .nav-cta {
+            font-size: 12px; font-weight: 600;
+            background: var(--teal); color: #ffffff !important;
+            padding: 7px 18px; border-radius: 6px;
+            text-decoration: none; transition: background 0.15s;
+            letter-spacing: 0.5px;
+        }
+        .nav-cta:hover { background: var(--teal-deep); color: #ffffff !important; }
+
+        /* Hero */
+        .hero {
+            max-width: 1080px; margin: 0 auto;
+            padding: 100px 32px 80px;
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 80px; align-items: center;
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(29,158,117,0.08);
+            border: 0.5px solid rgba(29,158,117,0.2);
+            border-radius: 100px; padding: 4px 12px;
+            font-size: 11px; color: var(--teal);
+            letter-spacing: 1.5px; text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 52px; font-weight: 300;
+            line-height: 1.1; letter-spacing: -1px;
+            color: var(--text); margin-bottom: 20px;
+        }
+        .hero h1 em {
+            font-style: normal; color: var(--teal);
+        }
+        .hero p {
+            font-size: 15px; color: var(--text2);
+            line-height: 1.75; margin-bottom: 36px;
+            max-width: 480px;
+        }
+        .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+        .btn-primary {
+            background: var(--teal); color: #fff;
+            padding: 12px 28px; border-radius: 8px;
+            font-size: 14px; font-weight: 500;
+            text-decoration: none; transition: background 0.15s;
+            letter-spacing: 0.3px;
+        }
+        .btn-primary:hover { background: var(--teal-deep); }
+        .btn-ghost {
+            background: transparent;
+            border: 0.5px solid var(--border);
+            color: var(--text2);
+            padding: 12px 24px; border-radius: 8px;
+            font-size: 14px; text-decoration: none;
+            transition: border-color 0.15s, color 0.15s;
+        }
+        .btn-ghost:hover { border-color: var(--teal); color: var(--teal); }
+
+        /* Dashboard mockup — partial view */
+        .dash-wrapper {
+            position: relative;
+            border-radius: 14px 0 0 14px;
+            overflow: hidden;
+            max-height: 380px;
+        }
+        .dash-wrapper::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 160px;
+            background: linear-gradient(to bottom, transparent, var(--black));
+            pointer-events: none;
+            z-index: 2;
+        }
+        .dash-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0;
+            width: 120px;
+            background: linear-gradient(to right, transparent, var(--black));
+            pointer-events: none;
+            z-index: 2;
+        }
+        .dash-frame {
+            background: var(--surface);
+            border: 0.5px solid var(--border);
+            border-radius: 14px; overflow: hidden;
+        }
+        .dash-topbar {
+            padding: 10px 16px;
+            border-bottom: 0.5px solid var(--border);
+            display: flex; align-items: center;
+            background: var(--surface2);
+        }
+        .dash-topbar .dot-row { display: flex; gap: 5px; }
+        .dot { width: 9px; height: 9px; border-radius: 50%; }
+        .dash-body {
+            display: grid; grid-template-columns: 1fr 160px;
+        }
+        .dash-cal {
+            padding: 12px 14px;
+            border-right: 0.5px solid var(--border);
+        }
+        .cal-nav-row {
+            display: flex; align-items: center;
+            justify-content: space-between; margin-bottom: 8px;
+        }
+        .cal-nav-row span { font-size: 11px; font-weight: 500; color: var(--text); }
+        .cal-nav-row .arr { font-size: 10px; color: var(--text2); }
+        .cal-grid {
+            display: grid; grid-template-columns: repeat(7, 1fr);
+            gap: 1px; font-size: 9px;
+        }
+        .cal-dl { color: var(--text2); text-align: center; padding: 2px 0; }
+        .cal-d { color: var(--text2); text-align: center; padding: 3px 1px; min-height: 44px; }
+        .cal-d .dn { margin-bottom: 2px; }
+        .cal-d.today .dn {
+            background: var(--teal); color: #fff;
+            border-radius: 50%; width: 16px; height: 16px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 2px; font-size: 8px;
+        }
+        .ev {
+            font-size: 7px; border-radius: 2px;
+            padding: 1px 2px; margin-bottom: 1px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .ev-blue { background: rgba(28,126,214,0.15); color: #85B7EB; }
+        .ev-teal { background: rgba(29,158,117,0.15); color: #5DCAA5; }
+        .ev-gray { background: rgba(136,135,128,0.15); color: var(--text2); }
+        .dash-right {
+            padding: 10px;
+            display: flex; flex-direction: column; gap: 8px;
+        }
+        .msg-box {
+            background: var(--surface2);
+            border-radius: 7px; padding: 8px;
+        }
+        .msg-label {
+            font-size: 8px; letter-spacing: 1.5px;
+            color: var(--text2); text-transform: uppercase; margin-bottom: 5px;
+        }
+        .msg-input {
+            width: 100%; background: var(--black);
+            border: 0.5px solid var(--border);
+            border-radius: 5px; padding: 5px 7px;
+            font-size: 8px; color: var(--text2);
+            height: 40px; resize: none;
+        }
+        .msg-send {
+            margin-top: 4px; width: 100%;
+            background: var(--teal); color: #fff;
+            border: none; border-radius: 4px;
+            font-size: 8px; padding: 4px; cursor: pointer;
+        }
+        .ov-label {
+            font-size: 8px; letter-spacing: 1.5px;
+            color: var(--text2); text-transform: uppercase;
+        }
+        .ov-card {
+            border: 0.5px solid var(--border);
+            border-radius: 7px; padding: 8px;
+            background: var(--black);
+        }
+        .ov-card-head {
+            display: flex; align-items: center;
+            gap: 4px; margin-bottom: 4px;
+        }
+        .ov-card-icon { font-size: 9px; color: var(--text2); }
+        .ov-card-title {
+            font-size: 7px; letter-spacing: 1px;
+            text-transform: uppercase; color: var(--text2);
+        }
+        .ov-val { font-size: 16px; font-weight: 500; color: var(--text); line-height: 1; }
+        .ov-sub { font-size: 8px; color: var(--text2); margin-top: 1px; }
+        .ov-bar { height: 3px; border-radius: 2px; background: var(--border); margin-top: 5px; overflow: hidden; }
+        .ov-bar-fill { height: 100%; border-radius: 2px; }
+        .ov-row { display: flex; justify-content: space-between; margin-top: 3px; }
+        .ov-row span { font-size: 7px; color: var(--text2); }
+        .task-row {
+            display: flex; align-items: center; gap: 4px;
+            padding: 2px 0; border-bottom: 0.5px solid var(--border);
+        }
+        .task-row:last-child { border: none; }
+        .task-check {
+            width: 8px; height: 8px; border-radius: 2px;
+            border: 0.5px solid var(--border); flex-shrink: 0;
+        }
+        .task-check.done { background: var(--teal); border-color: var(--teal); }
+        .task-text { font-size: 8px; color: var(--text2); }
+        .task-text.done { text-decoration: line-through; opacity: 0.4; }
+
+        /* Flow section */
+        .flow-section {
+            max-width: 1080px; margin: 0 auto;
+            padding: 100px 32px;
+        }
+        .section-eyebrow {
+            font-size: 10px; letter-spacing: 3px;
+            color: var(--teal); text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .flow-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 1px; margin-top: 48px;
+            border: 0.5px solid var(--border); border-radius: 12px;
+            overflow: hidden;
+        }
+        .flow-step {
+            background: var(--surface); padding: 28px 24px;
+            border-right: 0.5px solid var(--border);
+            position: relative;
+        }
+        .flow-step:last-child { border-right: none; }
+        .flow-num {
+            font-size: 10px; letter-spacing: 2px;
+            color: var(--teal); margin-bottom: 14px;
+        }
+        .flow-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px; font-weight: 400;
+            color: var(--text); margin-bottom: 8px;
+        }
+        .flow-desc {
+            font-size: 12px; color: var(--text2); line-height: 1.65;
+        }
+        .flow-arrow {
+            position: absolute; right: -10px; top: 50%;
+            transform: translateY(-50%);
+            width: 20px; height: 20px;
+            background: var(--surface2); border: 0.5px solid var(--border);
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; z-index: 1;
+            font-size: 9px; color: var(--teal);
+        }
+
+        /* Features */
+        .features-section {
+            border-top: 0.5px solid var(--border);
+            padding: 100px 0;
+        }
+        .features-inner {
+            max-width: 1080px; margin: 0 auto; padding: 0 32px;
+        }
+        .features-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1px; margin-top: 48px;
+        }
+        .feature-card {
+            background: var(--surface); padding: 36px 28px;
+            border: 0.5px solid var(--border);
+            transition: border-color 0.2s;
+        }
+        .feature-card:first-child { border-radius: 12px 0 0 12px; }
+        .feature-card:last-child { border-radius: 0 12px 12px 0; }
+        .feature-card:hover { border-color: rgba(29,158,117,0.3); }
+        .feature-icon {
+            width: 36px; height: 36px;
+            background: rgba(29,158,117,0.08);
+            border: 0.5px solid rgba(29,158,117,0.2);
+            border-radius: 8px; display: flex;
+            align-items: center; justify-content: center;
+            margin-bottom: 20px;
+        }
+        .feature-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 17px; font-weight: 400;
+            color: var(--text); margin-bottom: 10px;
+        }
+        .feature-desc { font-size: 13px; color: var(--text2); line-height: 1.7; }
+
+        /* Philosophy */
+        .philosophy-section {
+            border-top: 0.5px solid var(--border);
+            padding: 100px 32px;
+            text-align: center;
+        }
+        .philosophy-inner { max-width: 600px; margin: 0 auto; }
+        .philosophy-quote {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px; font-weight: 300;
+            color: var(--text); line-height: 1.35;
+            margin: 24px 0 20px; letter-spacing: -0.5px;
+        }
+        .philosophy-quote em { font-style: normal; color: var(--teal); }
+
+        /* Subscribe */
+        .subscribe-section {
+            border-top: 0.5px solid var(--border);
+            padding: 100px 32px; text-align: center;
+        }
+        .subscribe-inner { max-width: 480px; margin: 0 auto; }
+        .subscribe-form {
+            display: flex; gap: 8px; margin-top: 32px;
+        }
+        .subscribe-input {
+            flex: 1; background: var(--surface);
+            border: 0.5px solid var(--border);
+            border-radius: 8px; padding: 11px 16px;
+            font-size: 13px; color: var(--text);
+            outline: none; transition: border-color 0.15s;
+        }
+        .subscribe-input:focus { border-color: var(--teal); }
+        .subscribe-input::placeholder { color: var(--text2); }
+        .subscribe-btn {
+            background: var(--teal); color: #fff;
+            border: none; border-radius: 8px;
+            padding: 11px 22px; font-size: 13px;
+            font-weight: 500; cursor: pointer;
+            transition: background 0.15s; white-space: nowrap;
+        }
+        .subscribe-btn:hover { background: var(--teal-deep); }
+
+        /* Footer */
+        footer {
+            border-top: 0.5px solid var(--border);
+            padding: 40px 32px;
+        }
+        .footer-inner {
+            max-width: 1080px; margin: 0 auto;
+            display: flex; align-items: center;
+            justify-content: space-between;
+        }
+        .footer-logo {
+            display: flex; align-items: center; gap: 8px;
+        }
+        .footer-logo span {
+            font-size: 11px; letter-spacing: 3px; color: var(--text2);
+        }
+        .footer-right { font-size: 11px; color: var(--text3); }
+
+        @media (max-width: 768px) {
+            .hero { grid-template-columns: 1fr; gap: 48px; padding: 60px 20px; }
+            .hero h1 { font-size: 36px; }
+            .flow-grid { grid-template-columns: 1fr 1fr; }
+            .features-grid { grid-template-columns: 1fr; }
+            .feature-card:first-child { border-radius: 12px 12px 0 0; }
+            .feature-card:last-child { border-radius: 0 0 12px 12px; }
+            .nav-links a:not(.nav-cta) { display: none; }
+            .subscribe-form { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+    <div class="nav-inner">
+        <a href="#" class="nav-logo">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <circle cx="11" cy="11" r="8.5" stroke="#F5F5F3" stroke-width="1.5"/>
+                <line x1="11" y1="11" x2="11" y2="19.5" stroke="#F5F5F3" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="2.5" y1="11" x2="11" y2="11" stroke="#F5F5F3" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M 2.5 11 A 8.5 8.5 0 0 1 11 2.5" stroke="#F5F5F3" stroke-width="1.2" stroke-dasharray="3 2.5" stroke-linecap="round" class="symbol-dash"/>
+                <circle cx="11" cy="11" r="1.8" fill="#1D9E75"/>
+            </svg>
+            <span>KLAIVE</span>
+        </a>
+        <div class="nav-links">
+            <a href="#flow">How it works</a>
+            <a href="#features">Features</a>
+            <a href="#philosophy">Philosophy</a>
+            <a href="signup.html" class="nav-cta">Get started</a>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<header>
+    <div class="hero">
+        <div>
+            <div class="hero-badge">
+                <span style="width:5px;height:5px;background:var(--teal);border-radius:50%;"></span
+            </div>
+            <h1>Just send it.<br><em>The system<br>handles the rest.</em></h1>
+            <p>Text anything — a date, an amount, a note. KLAIVE reads it, organizes it, and places it exactly where it belongs. No setup. No tagging. No thinking required.</p>
+            <div class="hero-actions">
+                <a href="#flow" class="btn-ghost">See how it works</a>
+            </div>
+        </div>
+
+        <!-- Dashboard mockup -->
+        <div class="dash-wrapper">
+        <div class="dash-frame">
+            <div class="dash-topbar">
+                <div class="dot-row">
+                    <div class="dot" style="background:#FF5F57;"></div>
+                    <div class="dot" style="background:#FFBD2E;"></div>
+                    <div class="dot" style="background:#28CA41;"></div>
+                </div>
+            </div>
+            <div class="dash-body">
+                <!-- Calendar -->
+                <div class="dash-cal">
+                    <div class="cal-nav-row">
+                        <span style="font-size:9px;color:var(--text2);">‹</span>
+                        <span>May 2025</span>
+                        <div style="display:flex;gap:4px;">
+                            <span style="font-size:8px;padding:2px 6px;border:0.5px solid var(--border);border-radius:3px;color:var(--text2);">Today</span>
+                            <span style="font-size:8px;padding:2px 6px;background:var(--teal);border-radius:3px;color:#fff;">+ Add</span>
+                        </div>
+                        <span style="font-size:9px;color:var(--text2);">›</span>
+                    </div>
+                    <style>
+                        .dn-row { display:flex; align-items:center; justify-content:center; gap:3px; margin-bottom:2px; }
+                        .rdot { width:5px; height:5px; border-radius:50%; background:#E24B4A; flex-shrink:0; }
+                    </style>
+                    <div class="cal-grid">
+                        <div class="cal-dl">S</div><div class="cal-dl">M</div><div class="cal-dl">T</div><div class="cal-dl">W</div><div class="cal-dl">T</div><div class="cal-dl">F</div><div class="cal-dl">S</div>
+                        <!-- May 2025 starts Thursday -->
+                        <div class="cal-d"></div><div class="cal-d"></div><div class="cal-d"></div><div class="cal-d"></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">1</span></div><div class="ev ev-gray">88.3kg</div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">2</span></div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">3</span></div></div>
+                        <!-- Row 2 -->
+                        <div class="cal-d"><div class="dn-row"><span class="dn">4</span></div><div class="ev ev-teal">Reserved</div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">5</span></div><div class="ev ev-gray">88.9kg</div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">6</span></div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">7</span></div><div class="ev ev-blue">3p Meeting</div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">8</span><span class="rdot"></span></div><div class="ev ev-gray">88.6kg</div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">9</span></div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">10</span></div></div>
+                        <!-- Row 3 -->
+                        <div class="cal-d"><div class="dn-row"><span class="dn">11</span></div><div class="ev ev-gray">88.4kg</div><div class="ev ev-blue">SF w Abe</div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">12</span></div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">13</span><span class="rdot"></span></div><div class="ev ev-teal">Haircut</div></div>
+                        <div class="cal-d today"><div class="dn-row"><span class="dn">14</span></div><div class="ev ev-blue">Doctor 2pm</div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">15</span></div><div class="ev ev-gray">Blood Test</div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">16</span></div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">17</span></div></div>
+                        <!-- Row 4 -->
+                        <div class="cal-d"><div class="dn-row"><span class="dn">18</span></div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">19</span></div><div class="ev ev-gray">89.3kg</div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">20</span></div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">21</span></div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">22</span></div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">23</span></div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">24</span></div></div>
+                        <!-- Row 5 -->
+                        <div class="cal-d"><div class="dn-row"><span class="dn">25</span></div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">26</span></div><div class="ev ev-blue">PT Appt</div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">27</span></div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">28</span></div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">29</span></div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">30</span></div></div>
+                        <div class="cal-d"><div class="dn-row"><span class="dn">31</span></div></div>
+                    </div>
+                </div>
+                <!-- Right panel -->
+                <div class="dash-right">
+                    <div class="msg-box">
+                        <div class="msg-label">Send to KLAIVE</div>
+                        <textarea class="msg-input" placeholder="Doctor appt Jun 17 2pm. BP 120/80." readonly></textarea>
+                        <button class="msg-send">Send</button>
+                    </div>
+                    <div class="ov-label">Overview</div>
+                    <div class="ov-card">
+                        <div class="ov-card-head">
+                            <span class="ov-card-icon">$</span>
+                            <span class="ov-card-title">Finance</span>
+                        </div>
+                        <div class="ov-val">$173</div>
+                        <div class="ov-sub">Remaining</div>
+                        <div class="ov-bar"><div class="ov-bar-fill" style="width:22%;background:#1C7ED6;"></div></div>
+                        <div class="ov-row"><span>Income $795</span><span>Spent $622</span></div>
+                    </div>
+                    <div class="ov-card">
+                        <div class="ov-card-head">
+                            <span class="ov-card-icon">♡</span>
+                            <span class="ov-card-title">Health</span>
+                        </div>
+                        <div style="display:flex;gap:8px;align-items:baseline;">
+                            <span class="ov-val" style="font-size:13px;">120/80</span>
+                            <span class="ov-sub">BP</span>
+                        </div>
+                        <div style="display:flex;gap:8px;align-items:baseline;margin-top:3px;">
+                            <span style="font-size:12px;font-weight:500;color:var(--text);">762</span>
+                            <span class="ov-sub">steps</span>
+                        </div>
+                    </div>
+                    <div class="ov-card">
+                        <div class="ov-card-head">
+                            <span class="ov-card-icon">✓</span>
+                            <span class="ov-card-title">Tasks</span>
+                        </div>
+                        <div class="task-row"><div class="task-check"></div><span class="task-text">Doctor appt Jun 17</span></div>
+                        <div class="task-row"><div class="task-check"></div><span class="task-text">Pay rent Jun 30</span></div>
+                        <div class="task-row"><div class="task-check done"></div><span class="task-text done">Buy groceries</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- HOW IT WORKS -->
+<section id="flow" class="flow-section">
+    <div class="section-eyebrow">How it works</div>
+    <h2 class="grotesk" style="font-size:36px;font-weight:300;color:var(--text);letter-spacing:-0.5px;max-width:480px;line-height:1.2;">
+        Sign up. Send a message.<br>Everything else is automatic.
+    </h2>
+    <div class="flow-grid">
+        <div class="flow-step">
+            <div class="flow-num">01</div>
+            <div class="flow-title">Sign up</div>
+            <p class="flow-desc">Gmail account and phone number. That's all. No credit card. No onboarding tutorial.</p>
+            <div class="flow-arrow">→</div>
+        </div>
+        <div class="flow-step">
+            <div class="flow-num">02</div>
+            <div class="flow-title">Text or message</div>
+            <p class="flow-desc">Send anything to your KLAIVE number — a note, a date, an amount, a health reading.</p>
+            <div class="flow-arrow">→</div>
+        </div>
+        <div class="flow-step">
+            <div class="flow-num">03</div>
+            <div class="flow-title">Your calendar</div>
+            <p class="flow-desc">Dates and appointments land on your calendar automatically. No manual entry. Ever.</p>
+            <div class="flow-arrow">→</div>
+        </div>
+        <div class="flow-step">
+            <div class="flow-num">04</div>
+            <div class="flow-title">Auto indexing</div>
+            <p class="flow-desc">Every message is parsed and filed — Finance, Health, or Tasks. Your dashboard updates in real time.</p>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="features-section">
+    <div class="features-inner">
+        <div class="section-eyebrow">Features</div>
+        <h2 class="grotesk" style="font-size:36px;font-weight:300;color:var(--text);letter-spacing:-0.5px;line-height:1.2;">
+            One input.<br>Three dashboards.
+        </h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <rect x="2" y="2" width="12" height="12" rx="2" stroke="#1D9E75" stroke-width="1.2"/>
+                        <line x1="2" y1="5.5" x2="14" y2="5.5" stroke="#1D9E75" stroke-width="1.2"/>
+                        <line x1="6" y1="1" x2="6" y2="4" stroke="#1D9E75" stroke-width="1.2" stroke-linecap="round"/>
+                        <line x1="10" y1="1" x2="10" y2="4" stroke="#1D9E75" stroke-width="1.2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="feature-title">Calendar sync</div>
+                <p class="feature-desc">Any date or time in your message becomes a calendar event. Syncs with Google Calendar automatically.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <circle cx="8" cy="8" r="5.5" stroke="#1D9E75" stroke-width="1.2"/>
+                        <path d="M8 5v3l2 2" stroke="#1D9E75" stroke-width="1.2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="feature-title">Auto classification</div>
+                <p class="feature-desc">Finance, Health, Tasks. KLAIVE reads the context and routes information to the right dashboard without prompts.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 13V8M7 13V5M11 13V9M15 13V3" stroke="#1D9E75" stroke-width="1.2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="feature-title">Live overview</div>
+                <p class="feature-desc">Your dashboard updates the moment a message arrives. No refresh. No manual input. Logged and visible instantly.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section id="philosophy" class="philosophy-section">
+    <div class="philosophy-inner">
+        <div class="section-eyebrow">Philosophy</div>
+        <div class="philosophy-quote">
+            "Raw input flows in.<br><em>Structured value flows out.</em><br>The system stays quiet."
+        </div>
+        <p style="font-size:14px;color:var(--text2);line-height:1.75;margin-bottom:0;">
+            KLAIVE is built on three principles — transformation, balance, and catalysis. Information enters as clay and leaves as structure. The system never interrupts. It simply works.
+        </p>
+    </div>
+</section>
+
+<!-- SUBSCRIBE -->
+<section class="subscribe-section" id="subscribe">
+    <div class="subscribe-inner">
+        <div class="section-eyebrow">Early access</div>
+        <h2 class="grotesk" style="font-size:32px;font-weight:300;color:var(--text);letter-spacing:-0.5px;margin-bottom:8px;">
+            Ready to send?
+        </h2>
+        <p style="font-size:14px;color:var(--text2);">Join the waitlist. No credit card required.</p>
+        <form class="subscribe-form" onsubmit="return false;">
+            <input type="email" class="subscribe-input" placeholder="Your email address" required>
+            <button type="submit" class="subscribe-btn">Get started</button>
+        </form>
+        <p style="font-size:11px;color:var(--text3);margin-top:16px;letter-spacing:0.5px;">
+            KLAIVE · San Francisco, CA
+        </p>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-inner">
+        <div class="footer-logo">
+            <svg width="18" height="18" viewBox="0 0 22 22" fill="none">
+                <circle cx="11" cy="11" r="8.5" stroke="#F5F5F3" stroke-width="1.5"/>
+                <line x1="11" y1="11" x2="11" y2="19.5" stroke="#F5F5F3" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="2.5" y1="11" x2="11" y2="11" stroke="#F5F5F3" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M 2.5 11 A 8.5 8.5 0 0 1 11 2.5" stroke="#F5F5F3" stroke-width="1.2" stroke-dasharray="3 2.5" stroke-linecap="round"/>
+                <circle cx="11" cy="11" r="1.8" fill="#1D9E75"/>
+            </svg>
+            <span>KLAIVE</span>
+        </div>
+        <div class="footer-right">© 2026 KLAIVE · San Francisco, CA · All rights reserved.</div>
+    </div>
+</footer>
+
+</body>
+</html>
