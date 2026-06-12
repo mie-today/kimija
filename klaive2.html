@@ -72,8 +72,8 @@
 
         /* Hero */
         .hero {
-            max-width: 1080px; margin: 0 auto;
-            padding: 100px 32px 80px;
+            width: 100%; max-width: 1140px; margin: 0 auto;
+            padding: 100px 40px 80px;
             display: grid; grid-template-columns: 1fr 1fr;
             gap: 80px; align-items: center;
         }
@@ -392,20 +392,20 @@
         }
         .footer-right { font-size: 11px; color: var(--text3); }
 
-        @media (max-width: 768px) {
-            .hero { grid-template-columns: 1fr; gap: 48px; padding: 60px 20px; }
-            .hero h1 { font-size: 36px; }
-            .flow-grid { grid-template-columns: 1fr 1fr; }
-            .features-grid { grid-template-columns: 1fr; }
-            .feature-card:first-child { border-radius: 12px 12px 0 0; }
-            .feature-card:last-child { border-radius: 0 0 12px 12px; }
+        @media (max-width: 980px) {
+            .hero { grid-template-columns: 1fr; gap: 48px; padding: 70px 32px; }
+            .hero h1 { font-size: 44px; }
+            .dash-wrapper { border-radius: 14px; max-width: 560px; }
             .nav-links a:not(.nav-cta) { display: none; }
-            .subscribe-form { flex-direction: column; }
+        }
+        @media (max-width: 620px) {
+            .hero { padding: 56px 22px; }
+            .hero h1 { font-size: 36px; }
         }
     </style>
     <style>
         /* ===== Refreshed sections (positioning v2) ===== */
-        .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+        .wrap { width: 100%; max-width: 1140px; margin: 0 auto; padding: 0 40px; }
         .section-eyebrow {
             font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
             color: var(--teal); margin-bottom: 16px;
@@ -414,9 +414,9 @@
         .sec h2 {
             font-family: 'Space Grotesk', sans-serif;
             font-size: 34px; font-weight: 300; letter-spacing: -0.5px;
-            line-height: 1.2; color: var(--text); margin-bottom: 18px; max-width: 640px;
+            line-height: 1.2; color: var(--text); margin-bottom: 18px; max-width: 760px;
         }
-        .sec .lead { font-size: 15px; color: var(--text2); line-height: 1.75; max-width: 560px; margin-bottom: 0; }
+        .sec .lead { font-size: 15px; color: var(--text2); line-height: 1.75; max-width: 620px; margin-bottom: 0; }
         /* Problem */
         .prob-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 44px; }
         .prob-card {
@@ -489,10 +489,26 @@
         .cta h2 { font-family: 'Space Grotesk', sans-serif; font-size: 40px; font-weight: 300; letter-spacing: -1px; color: var(--text); margin-bottom: 16px; }
         .cta p { font-size: 14px; color: var(--text2); margin-bottom: 32px; }
         .pron { font-size: 11px; color: var(--text3); letter-spacing: 1px; }
-        @media (max-width: 760px) {
-            .prob-grid, .own, .digest, .why-grid, .pipe { grid-template-columns: 1fr; gap: 28px; }
+        /* Tablet */
+        @media (max-width: 980px) {
+            .wrap { padding: 0 32px; }
+            .pipe { grid-template-columns: 1fr 1fr; gap: 32px 28px; }
+            .pipe-step:nth-child(2)::after { display: none; }
+            .why-grid { grid-template-columns: 1fr; }
+            .own { grid-template-columns: 1fr; gap: 40px; }
+            .digest { grid-template-columns: 1fr; gap: 32px; }
+            .sec h2 { font-size: 30px; }
+        }
+        /* Mobile */
+        @media (max-width: 620px) {
+            .wrap { padding: 0 22px; }
+            .sec { padding: 72px 0; }
+            .prob-grid, .pipe { grid-template-columns: 1fr; gap: 24px; }
+            .pipe-step { padding-right: 0; }
             .pipe-step::after { display: none; }
-            .sec h2 { font-size: 27px; }
+            .sec h2 { font-size: 26px; }
+            .cta h2 { font-size: 32px; }
+            .phone, .bubble { max-width: 100%; }
         }
     </style>
 </head>
